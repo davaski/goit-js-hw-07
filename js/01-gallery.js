@@ -24,19 +24,20 @@ function selectElement(event) {
     return;
   }
   const instance = basicLightbox.create(
-    `<img src="${event.target.dataset.source}">`
+    `<img src="${event.target.dataset.source}">`,
+    {
+      onShow: () => {
+        window.addEventListener("keydown", closeModalByEsc);
+      },
+      onClose: () => {
+        window.removeEventListener("keydown", closeModalByEsc);
+      },
+    }
   );
-  instance.show();
-  const visible = instance.visible();
-  if (visible) {
-    closeModalByEsc(instance);
-  }
-}
-
-function closeModalByEsc(instance) {
-  document.addEventListener("keydown", (event) => {
+  const closeModalByEsc = (event) => {
     if (event.key === "Escape") {
       return instance.close();
     }
-  });
+  };
+  instance.show();
 }
